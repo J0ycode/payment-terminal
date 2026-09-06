@@ -42,18 +42,21 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "frontend", "index.html"));
 });
 
-// ---- Connect to MongoDB, then start listening ----
+// ---- Connect to MongoDB ----
 mongoose
   .connect(MONGO_URI)
-  .then(() => {
-    console.log("✓ Connected to MongoDB at", MONGO_URI);
-    app.listen(PORT, () => {
-      console.log(`✓ Server running at http://localhost:${PORT}`);
-    });
-  })
+  .then(() => console.log("✓ Connected to MongoDB"))
   .catch((err) => {
     console.error("✗ MongoDB connection failed:", err.message);
-    console.error("  Make sure MongoDB is running on localhost:27017");
-    console.error("  Or set MONGO_URI environment variable to your connection string.");
-    process.exit(1);
+    if (!process.env.VERCEL) process.exit(1);
   });
+
+// ---- Start listening (Local only) ----
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`✓ Server running at http://localhost:${PORT}`);
+  });
+}
+
+// Export the Express API for Vercel
+module.exports = app;
