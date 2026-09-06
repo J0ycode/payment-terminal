@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Terminal — Polymorphism, Live</title>
+<meta name="description" content="A payment terminal demonstrating polymorphism with Credit Card, PayPal, and Bank Transfer processing backed by MongoDB.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-head">
+    <h1>Payment Terminal</h1>
+    <p class="head-sub">Connected to MongoDB &middot; Express API</p>
+  </header>
+
+  <div id="error-banner" class="error-banner"></div>
+  <div id="success-banner" class="success-banner"></div>
+
+  <div class="layout">
+    <!-- LEFT: controls -->
+    <div>
+      <div class="panel">
+        <h2>Add a payment</h2>
+        <div class="tabs">
+          <button class="tab active" data-type="card" id="tab-card">Credit card</button>
+          <button class="tab" data-type="paypal" id="tab-paypal">PayPal</button>
+          <button class="tab" data-type="bank" id="tab-bank">Bank transfer</button>
+        </div>
+
+        <!-- Credit card form -->
+        <div class="form-panel active" id="panel-card">
+          <div class="sample-row"><button class="btn-ghost" data-sample="card" id="sample-card">Fill sample details</button></div>
+          <div class="field-row">
+            <div class="field"><label>Amount</label><input id="card-amount" type="number" value="1500" /></div>
+            <div class="field"><label>Currency</label>
+              <select id="card-currency"><option>USD</option><option>EUR</option><option>INR</option></select>
+            </div>
+          </div>
+          <div class="field"><label>Cardholder name</label><input id="card-cardHolderName" placeholder="Alex Rivera" /></div>
+          <div class="field"><label>Card number</label><input id="card-cardNumber" placeholder="4111 1111 1111 1234" /></div>
+          <div class="field-row">
+            <div class="field"><label>Expiry</label><input id="card-expiry" placeholder="12/29" /></div>
+            <div class="field"><label>CVV</label><input id="card-cvv" placeholder="123" /></div>
+          </div>
+          <button class="btn btn-primary" id="add-card">Add to queue</button>
+        </div>
+
+        <!-- PayPal form -->
+        <div class="form-panel" id="panel-paypal">
+          <div class="sample-row"><button class="btn-ghost" data-sample="paypal" id="sample-paypal">Fill sample details</button></div>
+          <div class="field-row">
+            <div class="field"><label>Amount</label><input id="paypal-amount" type="number" value="750" /></div>
+            <div class="field"><label>Currency</label>
+              <select id="paypal-currency"><option>USD</option><option>EUR</option><option>INR</option></select>
+            </div>
+          </div>
+          <div class="field"><label>PayPal email</label><input id="paypal-email" placeholder="alex@example.com" /></div>
+          <div class="field"><label>Password</label><input id="paypal-password" type="password" placeholder="••••••••" /></div>
+          <button class="btn btn-primary" id="add-paypal">Add to queue</button>
+        </div>
+
+        <!-- Bank transfer form -->
+        <div class="form-panel" id="panel-bank">
+          <div class="sample-row"><button class="btn-ghost" data-sample="bank" id="sample-bank">Fill sample details</button></div>
+          <div class="field-row">
+            <div class="field"><label>Amount</label><input id="bank-amount" type="number" value="20000" /></div>
+            <div class="field"><label>Currency</label>
+              <select id="bank-currency"><option>USD</option><option>EUR</option><option>INR</option></select>
+            </div>
+          </div>
+          <div class="field"><label>Bank name</label><input id="bank-bankName" placeholder="Northfield Union Bank" /></div>
+          <div class="field"><label>Account number</label><input id="bank-accountNumber" placeholder="123456789012" /></div>
+          <div class="field"><label>Routing / IFSC code</label><input id="bank-routingCode" placeholder="NFUB0004521" /></div>
+          <button class="btn btn-primary" id="add-bank">Add to queue</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Queue</h2>
+        <ul id="queue-list"></ul>
+        <p id="queue-empty">Nothing queued yet — add a payment above.</p>
+        <button class="btn btn-primary" id="process-btn" disabled>Process all (0)</button>
+      </div>
+
+      <!-- Connection status indicator -->
+      <div class="panel status-panel">
+        <div class="status-row">
+          <span class="status-dot" id="db-dot"></span>
+          <span class="status-label" id="db-status">Checking MongoDB…</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: receipt tape -->
+    <div class="receipt-wrap">
+      <div class="receipt-topline">
+        <h2>Ledger</h2>
+        <div class="totals">
+          <div class="value">$<span id="total-value">0.00</span></div>
+          <div class="label"><span id="history-count">0</span> processed</div>
+        </div>
+      </div>
+      <div id="receipt-feed"></div>
+      <p id="receipt-empty">Processed payments will print here, newest first.</p>
+    </div>
+  </div>
+
+  <footer>Full-stack: Express + MongoDB backend &middot; Vanilla JS frontend &middot; Java equivalents included</footer>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
