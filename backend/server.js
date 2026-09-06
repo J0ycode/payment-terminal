@@ -43,8 +43,18 @@ app.get("*", (req, res) => {
 });
 
 // ---- Connect to MongoDB ----
+const mongooseOptions = {
+  serverSelectionTimeoutMS: 5000, // Fail quickly if DB is unreachable
+};
+
+// Check if running on Vercel without a proper MongoDB URI
+if (process.env.VERCEL && MONGO_URI.includes("localhost")) {
+  console.error("CRITICAL ERROR: Running on Vercel but MONGO_URI is pointing to localhost!");
+  console.error("Please add MONGO_URI to your Vercel Project Environment Variables.");
+}
+
 mongoose
-  .connect(MONGO_URI)
+  .connect(MONGO_URI, mongooseOptions)
   .then(() => console.log("✓ Connected to MongoDB"))
   .catch((err) => {
     console.error("✗ MongoDB connection failed:", err.message);
